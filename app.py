@@ -2,11 +2,17 @@ from __future__ import annotations
 
 import os
 from datetime import date
+from pathlib import Path
 
 from flask import Flask, jsonify, render_template, request, url_for
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from chatbot import QUICK_PROMPTS, get_response
+
+
+BASE_DIR = Path(__file__).resolve().parent
+TEMPLATES_DIR = BASE_DIR / "templates"
+STATIC_DIR = BASE_DIR / "public" / "static"
 
 
 CONTACT = {
@@ -269,7 +275,11 @@ def build_template_context() -> dict:
 
 
 def create_app() -> Flask:
-    app = Flask(__name__, static_folder="static", template_folder="templates")
+    app = Flask(
+        __name__,
+        static_folder=str(STATIC_DIR),
+        template_folder=str(TEMPLATES_DIR),
+    )
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1)
     app.config["JSON_SORT_KEYS"] = False
 
