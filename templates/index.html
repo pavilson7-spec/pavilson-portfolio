@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pavilson S | Futuristic AI Software Developer Portfolio</title>
+    <meta
+        name="description"
+        content="Pavilson S is an AI-powered software developer from India building Python, Flask, full stack, and intelligent application experiences."
+    >
+    <meta name="theme-color" content="#030712">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap"
+        rel="stylesheet"
+    >
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body
+    class="is-splash-active"
+    data-resume-url="{{ resume_url }}"
+    data-certificate-url="{{ certificate_url }}"
+    data-email="{{ contact.email }}"
+    data-phone="{{ contact.phone }}"
+    data-phone-link="{{ contact.phone_link }}"
+    data-linkedin="{{ contact.linkedin }}"
+>
+    <canvas id="bg" aria-hidden="true"></canvas>
+    <div class="page-noise" aria-hidden="true"></div>
+    <div class="grid-overlay" aria-hidden="true"></div>
+    <div class="ambient ambient-cyan" aria-hidden="true"></div>
+    <div class="ambient ambient-purple" aria-hidden="true"></div>
+
+    <section class="splash-screen" id="splashScreen" aria-label="Welcome screen">
+        <div class="splash-panel glass-panel">
+            <div class="eyebrow">
+                <span class="eyebrow-dot"></span>
+                Premium AI-powered developer portfolio
+            </div>
+            <h1>WELCOME TO<br><span>PAVILSON S</span></h1>
+            <p class="splash-lead">
+                Software developer, Python engineer, and AI-focused builder crafting immersive product experiences.
+            </p>
+            <div class="terminal-line">
+                <span class="terminal-prompt">&gt;</span>
+                <span id="splashTypedText"></span>
+                <span class="cursor" aria-hidden="true"></span>
+            </div>
+            <div class="splash-actions">
+                <button class="button button-primary" id="enterPortfolio" type="button">Enter Portfolio</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="site-shell">
+        <header class="site-header">
+            <nav class="nav-shell glass-panel">
+                <a class="brand" href="#hero" aria-label="Pavilson S portfolio home">
+                    <span class="brand-mark">PS</span>
+                    <span class="brand-copy">
+                        <strong>Pavilson S</strong>
+                        <small>AI-powered software developer</small>
+                    </span>
+                </a>
+
+                <button
+                    class="nav-toggle"
+                    id="navToggle"
+                    type="button"
+                    aria-controls="navPanel"
+                    aria-expanded="false"
+                    aria-label="Open navigation"
+                >
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <div class="nav-panel" id="navPanel">
+                    <div class="nav-links">
+                        {% for item in nav_items %}
+                            <a href="#{{ item.id }}">{{ item.label }}</a>
+                        {% endfor %}
+                    </div>
+                    <div class="nav-actions">
+                        <a class="button button-secondary button-small" href="{{ contact.linkedin }}" target="_blank" rel="noreferrer">
+                            LinkedIn
+                        </a>
+                        <a class="button button-primary button-small" href="#contact">Hire / Connect</a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <section id="hero" class="section hero-section">
+                <div class="hero-grid">
+                    <div class="hero-copy" data-reveal>
+                        <div class="eyebrow">
+                            <span class="eyebrow-dot"></span>
+                            Open to software developer, Python, AI, and full stack opportunities
+                        </div>
+                        <h1>
+                            Futuristic software engineering
+                            <span>built around AI-first execution.</span>
+                        </h1>
+                        <p class="hero-description">
+                            Pavilson S builds immersive web experiences, structured Python backends, and intelligent product workflows
+                            that feel polished enough for recruiters and practical enough for real teams.
+                        </p>
+                        <div class="terminal-line hero-terminal">
+                            <span class="terminal-prompt">&gt;</span>
+                            <span id="heroTypedText"></span>
+                            <span class="cursor" aria-hidden="true"></span>
+                        </div>
+                        <div class="hero-actions">
+                            <a class="button button-primary" href="#projects">Explore Projects</a>
+                            <button class="button button-secondary" type="button" data-chat-open="true">Talk to Pavilson Is Here</button>
+                            <a class="button button-ghost" href="{{ resume_url }}" download="{{ resume_filename }}">Download Resume</a>
+                        </div>
+                        <div class="hero-stat-grid">
+                            {% for stat in hero_stats %}
+                                <article class="metric-card glass-panel">
+                                    <strong>{{ stat.value }}</strong>
+                                    <span>{{ stat.label }}</span>
+                                </article>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="hero-visual" data-reveal>
+                        <div class="hero-portrait glass-panel">
+                            <div class="portrait-ring"></div>
+                            <div class="portrait-ring portrait-ring-two"></div>
+                            <img src="{{ profile_url }}" alt="Portrait of Pavilson S">
+                            <div class="portrait-badge">
+                                <span class="status-dot"></span>
+                                Available for interviews
+                            </div>
+                        </div>
+
+                        <div class="hero-glass-stack">
+                            <article class="glass-panel overlay-card overlay-card-top">
+                                <span class="card-label">AI Engineer Signal</span>
+                                <strong>Python, Flask, APIs, ML, and LLM-backed product thinking</strong>
+                            </article>
+                            <article class="glass-panel overlay-card overlay-card-bottom">
+                                <span class="card-label">Recruiter Snapshot</span>
+                                <p>Based in {{ contact.country }} • {{ contact.email }} • {{ contact.phone }}</p>
+                            </article>
+                        </div>
+
+                        <div class="hero-chip-grid">
+                            <span>Flask</span>
+                            <span>Django</span>
+                            <span>FastAPI</span>
+                            <span>Three.js UI</span>
+                            <span>Machine Learning</span>
+                            <span>Responsive Delivery</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="about" class="section">
+                <div class="section-heading" data-reveal>
+                    <span class="section-label">About</span>
+                    <h2>Premium AI-engineer branding grounded in real software execution.</h2>
+                    <p>
+                        This portfolio presents Pavilson as a recruiter-ready software developer who can contribute across backend systems,
+                        intelligent features, and polished user-facing product experiences.
+                    </p>
+                </div>
+
+                <div class="about-layout">
+                    <article class="glass-panel story-card" data-reveal>
+                        <span class="card-label">Profile Narrative</span>
+                        <p>
+                            Pavilson S is a software developer with a strong interest in Python engineering, AI-enhanced applications,
+                            and full stack product delivery. His work spans backend logic, API development, responsive interfaces,
+                            and machine-learning-oriented problem solving.
+                        </p>
+                        <p>
+                            The portfolio direction is intentionally cinematic and future-facing, but the foundation is practical:
+                            clean architecture, clear recruiter storytelling, and projects that connect technical ability with real outcomes.
+                        </p>
+                    </article>
+
+                    <div class="about-panel-grid">
+                        {% for panel in about_panels %}
+                            <article class="glass-panel info-card" data-reveal>
+                                <span class="card-label">{{ panel.title }}</span>
+                                <p>{{ panel.copy }}</p>
+                            </article>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+
+            <section id="skills" class="section">
+                <div class="section-heading" data-reveal>
+                    <span class="section-label">Skills</span>
+                    <h2>A software and AI stack organized for recruiter clarity.</h2>
+                    <p>
+                        Every category below is designed to help hiring teams quickly understand the range Pavilson can bring into a modern development environment.
+                    </p>
+                </div>
+
+                <div class="skill-grid">
+                    {% for group in skill_groups %}
+                        <article class="glass-panel skill-card" data-reveal>
+                            <span class="card-label">{{ group.label }}</span>
+                            <h3>{{ group.title }}</h3>
+                            <p>{{ group.copy }}</p>
+                            <div class="pill-group">
+                                {% for item in group.skills %}
+                                    <span>{{ item }}</span>
+                                {% endfor %}
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section id="experience" class="section">
+                <div class="section-heading" data-reveal>
+                    <span class="section-label">Experience</span>
+                    <h2>Internship-backed credibility across backend engineering and AI-oriented workflows.</h2>
+                    <p>
+                        The internship experience adds practical depth to the portfolio and shows that Pavilson can work inside product-minded software environments.
+                    </p>
+                </div>
+
+                <article class="glass-panel experience-card" data-reveal>
+                    <div class="experience-header">
+                        <div>
+                            <span class="card-label">Internship Experience</span>
+                            <h3>{{ experience.title }}</h3>
+                            <p class="experience-company">{{ experience.company }}</p>
+                        </div>
+                        <div class="experience-actions">
+                            <a class="button button-secondary button-small" href="#certifications">View Certificate</a>
+                            <button class="button button-primary button-small" type="button" data-chat-prompt="Summarize the internship experience.">
+                                Ask AI to Explain
+                            </button>
+                        </div>
+                    </div>
+
+                    <p class="experience-summary">{{ experience.summary }}</p>
+
+                    <div class="experience-grid">
+                        {% for point in experience.points %}
+                            <div class="experience-point">
+                                <span class="point-glow"></span>
+                                <p>{{ point }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="pill-group">
+                        {% for item in experience.stack %}
+                            <span>{{ item }}</span>
+                        {% endfor %}
+                    </div>
+                </article>
+            </section>
+
+            <section id="projects" class="section">
+                <div class="section-heading" data-reveal>
+                    <span class="section-label">Projects</span>
+                    <h2>Premium project showcases with assistant-guided demos and recruiter-ready storytelling.</h2>
+                    <p>
+                        Each project card pairs a cinematic glassmorphism presentation with working action buttons that route through the AI assistant for walkthroughs.
+                    </p>
+                </div>
+
+                <div class="projects-grid">
+                    {% for project in projects %}
+                        <article class="glass-panel project-card" data-reveal data-tilt>
+                            <div class="project-shot {{ project.shot_class }}">
+                                <div class="shot-bar">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                                <div class="shot-body">
+                                    <div class="shot-copy">
+                                        <span class="shot-tag">{{ project.tag }}</span>
+                                        <strong>{{ project.shot_title }}</strong>
+                                        <div class="shot-lines">
+                                            {% for width in project.shot_lines %}
+                                                <span style="width: {{ width }};"></span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="shot-metrics">
+                                        {% for metric in project.shot_metrics %}
+                                            <div>
+                                                <strong>{{ metric.value }}</strong>
+                                                <span>{{ metric.label }}</span>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="project-content">
+                                <span class="card-label">{{ project.tag }}</span>
+                                <h3>{{ project.name }}</h3>
+                                <p>{{ project.summary }}</p>
+                                <ul class="project-points">
+                                    {% for detail in project.details %}
+                                        <li>{{ detail }}</li>
+                                    {% endfor %}
+                                </ul>
+                                <div class="pill-group">
+                                    {% for item in project.stack %}
+                                        <span>{{ item }}</span>
+                                    {% endfor %}
+                                </div>
+                                <div class="project-actions">
+                                    <button class="button button-secondary button-small" type="button" data-chat-prompt="{{ project.repo_prompt }}">
+                                        GitHub
+                                    </button>
+                                    <button class="button button-primary button-small" type="button" data-chat-prompt="{{ project.demo_prompt }}">
+                                        Live Demo
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section id="certifications" class="section">
+                <div class="section-heading" data-reveal>
+                    <span class="section-label">Certifications</span>
+                    <h2>Verified learning and internship validation.</h2>
+                    <p>
+                        The certificate asset is routed through Flask static delivery, so preview and download actions work cleanly across local and hosted environments.
+                    </p>
+                </div>
+
+                <div class="cert-grid">
+                    {% for item in certifications %}
+                        <article class="glass-panel cert-card" data-reveal>
+                            <div class="cert-copy">
+                                <span class="card-label">{{ item.badge }}</span>
+                                <h3>{{ item.title }}</h3>
+                                <p class="cert-issuer">{{ item.issuer }}</p>
+                                <p>{{ item.summary }}</p>
+                            </div>
+                            <div class="cert-actions">
+                                <a class="button button-secondary" href="{{ certificate_url }}" target="_blank" rel="noreferrer">Preview Certificate</a>
+                                <a class="button button-primary" href="{{ certificate_url }}" download="{{ certificate_filename }}">Download Certificate</a>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section id="assistant" class="section">
+                <div class="section-heading" data-reveal>
+                    <span class="section-label">AI Assistant</span>
+                    <h2>Pavilson Is Here, a recruiter-aware portfolio copilot.</h2>
+                    <p>
+                        The assistant can answer interview questions, explain projects, guide section navigation, and help recruiters access resume and contact information instantly.
+                    </p>
+                </div>
+
+                <div class="assistant-grid">
+                    <article class="glass-panel assistant-card" data-reveal>
+                        <div class="assistant-profile">
+                            <div class="assistant-profile__image">
+                                <img src="{{ profile_url }}" alt="Pavilson S assistant avatar">
+                                <span class="status-indicator"></span>
+                            </div>
+                            <div>
+                                <span class="card-label">Live Portfolio Concierge</span>
+                                <h3>{{ assistant_name }}</h3>
+                                <p>{{ assistant_intro }}</p>
+                            </div>
+                        </div>
+
+                        <div class="assistant-feature-list">
+                            {% for feature in assistant_features %}
+                                <div class="assistant-feature">
+                                    <span class="point-glow"></span>
+                                    <p>{{ feature }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </article>
+
+                    <article class="glass-panel assistant-prompts" data-reveal>
+                        <span class="card-label">Quick Prompts</span>
+                        <h3>Start a recruiter-friendly conversation.</h3>
+                        <div class="prompt-grid">
+                            {% for prompt in assistant_prompts %}
+                                <button class="prompt-chip" type="button" data-chat-prompt="{{ prompt }}">{{ prompt }}</button>
+                            {% endfor %}
+                        </div>
+                        <button class="button button-primary" type="button" data-chat-open="true">Open Assistant</button>
+                    </article>
+                </div>
+            </section>
+
+            <section id="contact" class="section">
+                <div class="section-heading" data-reveal>
+                    <span class="section-label">Contact</span>
+                    <h2>Direct recruiter access for interviews, screenings, and networking.</h2>
+                    <p>
+                        The contact section keeps outreach friction low and makes it easy for hiring teams to move from discovery to conversation.
+                    </p>
+                </div>
+
+                <div class="contact-grid">
+                    <a class="glass-panel contact-card" href="{{ contact.email_link }}">
+                        <span class="card-label">Email</span>
+                        <strong>{{ contact.email }}</strong>
+                        <p>Best route for interview scheduling and recruiter follow-up.</p>
+                    </a>
+                    <a class="glass-panel contact-card" href="{{ contact.phone_link }}">
+                        <span class="card-label">Phone</span>
+                        <strong>{{ contact.phone }}</strong>
+                        <p>Available for direct conversation and quick coordination.</p>
+                    </a>
+                    <a class="glass-panel contact-card" href="{{ contact.linkedin }}" target="_blank" rel="noreferrer">
+                        <span class="card-label">LinkedIn</span>
+                        <strong>View professional profile</strong>
+                        <p>Connect for networking, recruiter review, and opportunity discussions.</p>
+                    </a>
+                    <div class="glass-panel contact-card">
+                        <span class="card-label">Location</span>
+                        <strong>{{ contact.country }}</strong>
+                        <p>Open to software development, AI, backend, and full stack opportunities.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resume" class="section">
+                <div class="section-heading" data-reveal>
+                    <span class="section-label">Resume Download</span>
+                    <h2>Production-ready resume access with preview and direct download.</h2>
+                    <p>
+                        The resume asset is wired through Flask static routing so it remains easy to preview and download after deployment on Render, Railway, Vercel, or similar platforms.
+                    </p>
+                </div>
+
+                <article class="glass-panel resume-card" data-reveal>
+                    <div class="resume-copy">
+                        <span class="card-label">Recruiter Asset</span>
+                        <h3>Pavilson Software Developer Resume</h3>
+                        <p>
+                            Use the actions here to preview the PDF in a new tab or download the exact file for ATS, internal sharing, and interview preparation.
+                        </p>
+                    </div>
+                    <div class="resume-actions">
+                        <a class="button button-secondary" href="{{ resume_url }}" target="_blank" rel="noreferrer">Preview Resume</a>
+                        <a class="button button-primary" href="{{ resume_url }}" download="{{ resume_filename }}">Download Resume</a>
+                    </div>
+                </article>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <p>&copy; {{ current_year }} {{ contact.name }}. Built as a futuristic AI-powered software developer portfolio.</p>
+        </footer>
+    </div>
+
+    <button
+        class="assistant-fab"
+        id="chatToggle"
+        type="button"
+        aria-controls="chatContainer"
+        aria-expanded="false"
+        aria-label="Open Pavilson Is Here assistant"
+    >
+        <span class="assistant-fab__pulse"></span>
+        <img src="{{ profile_url }}" alt="Pavilson S avatar">
+        <span class="assistant-fab__online"></span>
+    </button>
+
+    <section class="chat-shell" id="chatContainer" aria-hidden="true" aria-label="Pavilson Is Here assistant">
+        <div class="chat-header">
+            <div class="chat-header__identity">
+                <img src="{{ profile_url }}" alt="Pavilson S assistant avatar">
+                <div>
+                    <strong>{{ assistant_name }}</strong>
+                    <p>Recruiter-ready AI portfolio assistant</p>
+                </div>
+            </div>
+            <button class="chat-close" id="chatClose" type="button" aria-label="Close assistant">Close</button>
+        </div>
+
+        <div class="chat-messages" id="chatMessages" role="log" aria-live="polite">
+            <div class="chat-messages__stack" id="chatMessageStack">
+                <article class="chat-message chat-message-bot">
+                    <div class="chat-bubble">
+                        <div class="chat-bubble__content">{{ assistant_intro }}</div>
+                        <div class="chat-actions">
+                            {% for prompt in assistant_prompts[:4] %}
+                                <button class="chat-action-button" type="button" data-action-kind="prompt" data-action-value="{{ prompt }}">
+                                    {{ prompt }}
+                                </button>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <form class="chat-form" id="chatForm">
+            <label class="sr-only" for="userInput">Ask Pavilson Is Here</label>
+            <textarea
+                id="userInput"
+                name="message"
+                rows="1"
+                placeholder="Ask about projects, interview answers, resume, or contact details..."
+            ></textarea>
+            <button class="button button-primary button-small" id="sendButton" type="submit">Send</button>
+        </form>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
