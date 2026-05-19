@@ -12,7 +12,7 @@ from chatbot import QUICK_PROMPTS, get_response
 
 BASE_DIR = Path(__file__).resolve().parent
 TEMPLATES_DIR = BASE_DIR / "templates"
-STATIC_DIR = BASE_DIR / "public" / "static"
+STATIC_DIR = BASE_DIR / "static"
 
 
 CONTACT = {
