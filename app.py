@@ -6,7 +6,20 @@ from pathlib import Path
 
 from flask import Flask, jsonify, redirect, render_template, request, send_file, send_from_directory, url_for
 from werkzeug.middleware.proxy_fix import ProxyFix
+from flask import Flask, render_template, send_from_directory
 
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+@app.route('/googlee58981fed161d70b.html')
+def google_verification():
+    return send_from_directory('.', 'googlee58981fed161d70b.html')
+
+if __name__ == "__main__":
+    app.run()
 BASE_DIR = Path(__file__).resolve().parent
 TEMPLATES_DIR = BASE_DIR / "templates"
 STATIC_DIR = BASE_DIR / "static"
