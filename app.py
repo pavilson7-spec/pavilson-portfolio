@@ -1,27 +1,24 @@
 from __future__ import annotations
 
 import os
-import shutil
 from datetime import date
 from pathlib import Path
 
-from flask import Flask, jsonify, redirect, render_template, request, send_file, url_for
+from flask import Flask, jsonify, redirect, render_template, request, send_file, send_from_directory, url_for
 from werkzeug.middleware.proxy_fix import ProxyFix
-
-from chatbot import QUICK_PROMPTS, get_response
-
 
 BASE_DIR = Path(__file__).resolve().parent
 TEMPLATES_DIR = BASE_DIR / "templates"
 STATIC_DIR = BASE_DIR / "static"
-PUBLIC_DIR = BASE_DIR / "public"
-PUBLIC_STATIC_DIR = PUBLIC_DIR / "static"
+RESUME_DIR = BASE_DIR / "resume"
 REQUIRED_DIRECTORIES = (
     TEMPLATES_DIR,
     STATIC_DIR,
     STATIC_DIR / "css",
     STATIC_DIR / "js",
     STATIC_DIR / "images",
+    STATIC_DIR / "certificates",
+    RESUME_DIR,
 )
 
 
@@ -36,7 +33,16 @@ CONTACT = {
     "linkedin": "https://www.linkedin.com/in/pavilson-s-b86500326/",
 }
 
-RESUME_FILENAME = "resume/Pavilson_Software_Developer_Resume.pdf"
+QUICK_PROMPTS = [
+    "Tell me about Pavilson S.",
+    "Explain the MindNest AI Application.",
+    "Summarize the internship experience.",
+    "How can I contact Pavilson?",
+    "What skills does Pavilson bring?",
+    "Help me download the resume.",
+]
+
+RESUME_FILENAME = "Pavilson_Software_Developer_Resume.pdf"
 CERTIFICATE_FILENAME = "certificates/Pavilson_Canza_Internship_Certificate.jpg"
 PROFILE_FILENAME = "images/pavilson-profile.png"
 
@@ -254,8 +260,85 @@ ASSISTANT_FEATURES = [
 ]
 
 
+def get_response(user_message: str) -> dict:
+    normalized = user_message.casefold()
+
+    if "mindnest" in normalized:
+        return {
+            "response": (
+                "MindNest AI Application highlights product-minded AI development. "
+                "It combines backend structure, API workflows, and intelligent interaction in a recruiter-friendly way."
+            ),
+            "actions": [
+                {"kind": "navigate", "value": "projects", "label": "View projects"},
+                {"kind": "navigate", "value": "assistant", "label": "Open assistant"},
+            ],
+            "suggested_prompts": QUICK_PROMPTS[:4],
+        }
+
+    if "internship" in normalized or "experience" in normalized:
+        return {
+            "response": (
+                "Pavilson completed a Software Development Internship at CANZA Technology Consultants, "
+                "working across Flask, Django, FastAPI, backend logic, authentication, MySQL, and AI-oriented workflows."
+            ),
+            "actions": [
+                {"kind": "navigate", "value": "experience", "label": "Open experience"},
+                {"kind": "navigate", "value": "certifications", "label": "View certificate"},
+            ],
+            "suggested_prompts": QUICK_PROMPTS[:4],
+        }
+
+    if "contact" in normalized or "email" in normalized or "phone" in normalized or "linkedin" in normalized:
+        return {
+            "response": (
+                "You can contact Pavilson at pavilson7@gmail.com, call +91 8667840473, "
+                "or connect on LinkedIn at https://www.linkedin.com/in/pavilson-s-b86500326/."
+            ),
+            "actions": [
+                {"kind": "contact", "value": "email", "label": "Email"},
+                {"kind": "contact", "value": "linkedin", "label": "LinkedIn"},
+            ],
+            "suggested_prompts": QUICK_PROMPTS[:4],
+        }
+
+    if "skill" in normalized or "stack" in normalized:
+        return {
+            "response": (
+                "Pavilson's stack centers on Python, Flask, Django, FastAPI, JavaScript, SQL, MySQL, REST APIs, "
+                "responsive frontend work, and AI-focused workflows including NLP and LLM integration."
+            ),
+            "actions": [
+                {"kind": "navigate", "value": "skills", "label": "Open skills"},
+                {"kind": "navigate", "value": "projects", "label": "View projects"},
+            ],
+            "suggested_prompts": QUICK_PROMPTS[:4],
+        }
+
+    if "resume" in normalized or "cv" in normalized:
+        return {
+            "response": "The resume is available for preview or download from the resume section.",
+            "actions": [
+                {"kind": "navigate", "value": "resume", "label": "Open resume"},
+                {"kind": "download", "value": "resume", "label": "Preview resume"},
+            ],
+            "suggested_prompts": QUICK_PROMPTS[:4],
+        }
+
+    return {
+        "response": (
+            "I can help with projects, internship experience, technical skills, contact details, or resume access."
+        ),
+        "actions": [
+            {"kind": "navigate", "value": "projects", "label": "View projects"},
+            {"kind": "navigate", "value": "contact", "label": "Open contact"},
+        ],
+        "suggested_prompts": QUICK_PROMPTS[:4],
+    }
+
+
 def build_template_context() -> dict:
-    resume_url = url_for("static", filename=RESUME_FILENAME)
+    resume_url = url_for("resume_file", filename=RESUME_FILENAME)
     certificate_url = url_for("static", filename=CERTIFICATE_FILENAME)
     profile_url = url_for("static", filename=PROFILE_FILENAME)
 
@@ -290,41 +373,13 @@ def ensure_project_structure() -> None:
         directory.mkdir(parents=True, exist_ok=True)
 
 
-def get_template_directory() -> Path:
-    if TEMPLATES_DIR.exists():
-        return TEMPLATES_DIR
-    return BASE_DIR
-
-
-def get_static_directory() -> Path:
-    # Vercel serves assets from public/, while local Flask development uses static/.
-    if os.getenv("VERCEL") and PUBLIC_STATIC_DIR.exists():
-        return PUBLIC_STATIC_DIR
-    return STATIC_DIR
-
-
-def sync_public_assets() -> None:
-    PUBLIC_DIR.mkdir(parents=True, exist_ok=True)
-
-    if PUBLIC_STATIC_DIR.exists():
-        shutil.rmtree(PUBLIC_STATIC_DIR)
-
-    shutil.copytree(STATIC_DIR, PUBLIC_STATIC_DIR)
-
-    favicon_source = STATIC_DIR / "images" / "favicon.ico"
-    if favicon_source.is_file():
-        shutil.copy2(favicon_source, PUBLIC_DIR / "favicon.ico")
-
-
 def create_app() -> Flask:
     ensure_project_structure()
-    template_dir = get_template_directory()
-    static_dir = get_static_directory()
 
     app = Flask(
         __name__,
-        static_folder=str(static_dir),
-        template_folder=str(template_dir),
+        static_folder=str(STATIC_DIR),
+        template_folder=str(TEMPLATES_DIR),
     )
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1)
     app.config["JSON_SORT_KEYS"] = False
@@ -335,16 +390,15 @@ def create_app() -> Flask:
 
     @app.get("/favicon.ico")
     def favicon():
-        favicon_candidates = (
-            PUBLIC_DIR / "favicon.ico",
-            STATIC_DIR / "images" / "favicon.ico",
-            static_dir / "images" / "favicon.ico",
-        )
-        for favicon_path in favicon_candidates:
-            if favicon_path.is_file():
-                return send_file(favicon_path, mimetype="image/x-icon", max_age=86400)
+        favicon_path = STATIC_DIR / "favicon.ico"
+        if favicon_path.is_file():
+            return send_file(favicon_path, mimetype="image/x-icon", max_age=86400)
 
         return redirect(url_for("static", filename=PROFILE_FILENAME), code=307)
+
+    @app.get("/resume/<path:filename>")
+    def resume_file(filename: str):
+        return send_from_directory(RESUME_DIR, filename)
 
     @app.get("/health")
     def health():
