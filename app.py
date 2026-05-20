@@ -7,14 +7,6 @@ from pathlib import Path
 from flask import Flask, jsonify, redirect, render_template, request, send_file, send_from_directory, url_for
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from flask import Flask, send_file
-
-app = Flask(__name__)
-
-@app.route('/google06484969bd287b9c.html')
-def google_verify():
-    return send_file('google06484969bd287b9c.html')
-
 BASE_DIR = Path(__file__).resolve().parent
 TEMPLATES_DIR = BASE_DIR / "templates"
 STATIC_DIR = BASE_DIR / "static"
@@ -406,7 +398,7 @@ def create_app() -> Flask:
 
     @app.route("/google06484969bd287b9c.html")
     def google_verify():
-        return send_from_directory("static", "google06484969bd287b9c.html")
+        return send_file(BASE_DIR / "google06484969bd287b9c.html")
 
     @app.get("/resume/<path:filename>")
     def resume_file(filename: str):
