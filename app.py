@@ -17,7 +17,6 @@ REQUIRED_DIRECTORIES = (
     STATIC_DIR / "css",
     STATIC_DIR / "js",
     STATIC_DIR / "images",
-    STATIC_DIR / "certificates",
     RESUME_DIR,
 )
 
@@ -43,7 +42,7 @@ QUICK_PROMPTS = [
 ]
 
 RESUME_FILENAME = "Pavilson_Software_Developer_Resume.pdf"
-CERTIFICATE_FILENAME = "certificates/Pavilson_Canza_Internship_Certificate.jpg"
+CERTIFICATE_FILENAME = "images/Pavilson_Canza_Internship_Certificate.jpg"
 PROFILE_FILENAME = "images/pavilson-profile.png"
 
 NAV_ITEMS = [
