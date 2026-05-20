@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import os
+import shutil
 from datetime import date
 from pathlib import Path
 
-from flask import Flask, jsonify, render_template, request, url_for
+from flask import Flask, jsonify, redirect, render_template, request, send_file, url_for
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from chatbot import QUICK_PROMPTS, get_response
@@ -13,6 +14,15 @@ from chatbot import QUICK_PROMPTS, get_response
 BASE_DIR = Path(__file__).resolve().parent
 TEMPLATES_DIR = BASE_DIR / "templates"
 STATIC_DIR = BASE_DIR / "static"
+PUBLIC_DIR = BASE_DIR / "public"
+PUBLIC_STATIC_DIR = PUBLIC_DIR / "static"
+REQUIRED_DIRECTORIES = (
+    TEMPLATES_DIR,
+    STATIC_DIR,
+    STATIC_DIR / "css",
+    STATIC_DIR / "js",
+    STATIC_DIR / "images",
+)
 
 
 CONTACT = {
@@ -270,15 +280,51 @@ def build_template_context() -> dict:
         "certificate_url": certificate_url,
         "certificate_filename": "Pavilson_Canza_Internship_Certificate.jpg",
         "profile_url": profile_url,
+        "favicon_url": url_for("favicon"),
         "current_year": date.today().year,
     }
 
 
+def ensure_project_structure() -> None:
+    for directory in REQUIRED_DIRECTORIES:
+        directory.mkdir(parents=True, exist_ok=True)
+
+
+def get_template_directory() -> Path:
+    if TEMPLATES_DIR.exists():
+        return TEMPLATES_DIR
+    return BASE_DIR
+
+
+def get_static_directory() -> Path:
+    # Vercel serves assets from public/, while local Flask development uses static/.
+    if os.getenv("VERCEL") and PUBLIC_STATIC_DIR.exists():
+        return PUBLIC_STATIC_DIR
+    return STATIC_DIR
+
+
+def sync_public_assets() -> None:
+    PUBLIC_DIR.mkdir(parents=True, exist_ok=True)
+
+    if PUBLIC_STATIC_DIR.exists():
+        shutil.rmtree(PUBLIC_STATIC_DIR)
+
+    shutil.copytree(STATIC_DIR, PUBLIC_STATIC_DIR)
+
+    favicon_source = STATIC_DIR / "images" / "favicon.ico"
+    if favicon_source.is_file():
+        shutil.copy2(favicon_source, PUBLIC_DIR / "favicon.ico")
+
+
 def create_app() -> Flask:
+    ensure_project_structure()
+    template_dir = get_template_directory()
+    static_dir = get_static_directory()
+
     app = Flask(
         __name__,
-        static_folder=str(STATIC_DIR),
-        template_folder=str(TEMPLATES_DIR),
+        static_folder=str(static_dir),
+        template_folder=str(template_dir),
     )
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1)
     app.config["JSON_SORT_KEYS"] = False
@@ -286,6 +332,19 @@ def create_app() -> Flask:
     @app.get("/")
     def home():
         return render_template("index.html", **build_template_context())
+
+    @app.get("/favicon.ico")
+    def favicon():
+        favicon_candidates = (
+            PUBLIC_DIR / "favicon.ico",
+            STATIC_DIR / "images" / "favicon.ico",
+            static_dir / "images" / "favicon.ico",
+        )
+        for favicon_path in favicon_candidates:
+            if favicon_path.is_file():
+                return send_file(favicon_path, mimetype="image/x-icon", max_age=86400)
+
+        return redirect(url_for("static", filename=PROFILE_FILENAME), code=307)
 
     @app.get("/health")
     def health():

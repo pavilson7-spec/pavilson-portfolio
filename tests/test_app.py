@@ -1,4 +1,5 @@
 import unittest
+from pathlib import Path
 
 from app import app
 
@@ -22,6 +23,13 @@ class PortfolioAppTests(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(payload["status"], "ok")
+
+    def test_favicon_route(self):
+        response = self.client.get("/favicon.ico")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "image/x-icon")
+        response.close()
 
     def test_chat_rejects_blank_messages(self):
         response = self.client.post("/chat", json={"message": "   "})
@@ -59,6 +67,20 @@ class PortfolioAppTests(unittest.TestCase):
         resume.close()
         certificate.close()
         profile.close()
+
+    def test_required_directories_exist(self):
+        project_root = Path(__file__).resolve().parents[1]
+
+        required_directories = [
+            project_root / "templates",
+            project_root / "static",
+            project_root / "static" / "css",
+            project_root / "static" / "js",
+            project_root / "static" / "images",
+        ]
+
+        for directory in required_directories:
+            self.assertTrue(directory.is_dir(), f"Missing directory: {directory}")
 
 
 if __name__ == "__main__":

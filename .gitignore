@@ -11,5 +11,13 @@ __pycache__/
 htmlcov/
 .env
 .env.*
+node_modules/
+public/
+dist/
+build/
+*.log
+.vercel/
+.idea/
+.vscode/
 Thumbs.db
 .DS_Store
