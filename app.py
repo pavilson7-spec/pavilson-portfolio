@@ -6,24 +6,11 @@ from pathlib import Path
 
 from flask import Flask, jsonify, redirect, render_template, request, send_file, send_from_directory, url_for
 from werkzeug.middleware.proxy_fix import ProxyFix
-from flask import Flask, render_template, send_from_directory
-
-app = Flask(__name__)
-
-@app.route("/")
-def home():
-    return render_template("index.html")
-
-@app.route('/googlee58981fed161d70b.html')
-def google_verification():
-    return send_from_directory('.', 'googlee58981fed161d70b.html')
-
-if __name__ == "__main__":
-    app.run()
 BASE_DIR = Path(__file__).resolve().parent
 TEMPLATES_DIR = BASE_DIR / "templates"
 STATIC_DIR = BASE_DIR / "static"
 RESUME_DIR = BASE_DIR / "resume"
+GOOGLE_VERIFICATION_FILENAME = "google06484969bd287b9c.html"
 REQUIRED_DIRECTORIES = (
     TEMPLATES_DIR,
     STATIC_DIR,
@@ -407,6 +394,10 @@ def create_app() -> Flask:
             return send_file(favicon_path, mimetype="image/x-icon", max_age=86400)
 
         return redirect(url_for("static", filename=PROFILE_FILENAME), code=307)
+
+    @app.get(f"/{GOOGLE_VERIFICATION_FILENAME}")
+    def google_verification():
+        return send_from_directory(STATIC_DIR, GOOGLE_VERIFICATION_FILENAME, mimetype="text/html")
 
     @app.get("/resume/<path:filename>")
     def resume_file(filename: str):
