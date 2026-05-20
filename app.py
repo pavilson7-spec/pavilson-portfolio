@@ -395,9 +395,9 @@ def create_app() -> Flask:
 
         return redirect(url_for("static", filename=PROFILE_FILENAME), code=307)
 
-    @app.get(f"/{GOOGLE_VERIFICATION_FILENAME}")
-    def google_verification():
-        return send_from_directory(STATIC_DIR, GOOGLE_VERIFICATION_FILENAME, mimetype="text/html")
+    @app.route("/google06484969bd287b9c.html")
+    def google_verify():
+        return send_from_directory("static", "google06484969bd287b9c.html")
 
     @app.get("/resume/<path:filename>")
     def resume_file(filename: str):
